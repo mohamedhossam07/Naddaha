@@ -19,23 +19,30 @@ print(Fore.GREEN + "")
 
 
 
-urlapifile = open('urlapi.txt','r')
-try:
-    urlapi = urlapifile.readline()
-except:
-    print("[+] Error : Couldn't find urlapi.txt file.")
 
 try:
-    fileurlcheck = sys.argv[1]
+    urlapifile = open('urlapi.txt','r')
+    urlapi = urlapifile.readline().strip('\n')
+    print('[+] API in use : '+urlapi.strip('\n'))
 except:
-    print("[+] Usage : python.exe urlscanner.py <list_file> ")
+    print(Fore.RED + "[+] Error : Couldn't find urlapi.txt file.")
+    print("[+] Usage : python.exe naddaha.py <list_file> ")
     sys.exit()
-print("- Checking file : "+sys.argv[1])
+
+
+if len(sys.argv) <= 1:
+    print(Fore.RED + "[+] Error : Couldn't find input file .")
+    print("[+] Usage : python.exe naddaha.py <list_file> ")
+    sys.exit()    
+else :    
+    fileurlcheck = sys.argv[1]
+    
+print("[+] Checking file : "+sys.argv[1])
 headers = {'API-Key':urlapi,'Content-Type':'application/json'}
 try:
     urlfileopen = open(fileurlcheck, 'r')
 except:
-    print("[+] Error : Issue opening the file : " +fileurlcheck+" .")
+    print(Fore.RED + "[+] Error : Issue opening the file : " +fileurlcheck+" .")
     sys.exit()
     
 
@@ -47,25 +54,25 @@ for urls in urlLines:
         print("[+] Checking url : "+urls)
         response = requests.post('https://urlscan.io/api/v1/scan/',headers=headers, data=json.dumps(data))
         if response.status_code == 400:
-                print ("- Output : "+response.json()['message'])
+                print ("[+] Output : "+response.json()['message'])
         urlimage = response.json()['result']
         urluuid = response.json()['uuid']
-        print ("- Output : "+response.json()['message'])
-        print ("- Urlscan : "+response.json()['result'])
-        print ("- Visibility : "+response.json()['visibility'])
-        print("- Downloading the image ...")
+        print ("[+] Output : "+response.json()['message'])
+        print ("[+] Urlscan : "+response.json()['result'])
+        print ("[+] Visibility : "+response.json()['visibility'])
+        print("[+] Downloading the image ...")
         time.sleep(25)
         try:
             responseimg = requests.get('https://urlscan.io/screenshots/'+urluuid+'.png')
-            print ("- Image code : "+ str(responseimg.status_code))
-            print ('- https://urlscan.io/screenshots/'+urluuid+'.png')
+            print ("[+] Image code : "+ str(responseimg.status_code))
+            print ('[+] https://urlscan.io/screenshots/'+urluuid+'.png')
             if responseimg.status_code == 200:
                 with open(urluuid+".png", 'wb') as f:
                     f.write(responseimg.content)
                 print("Image name : "+urluuid+".png")
         except:
-            print ("ERROR!")
+            print (Fore.RED + "[!] ERROR : issue took place while downloading the image.")
     except:
-            print ("Oops!!")
+            print (Fore.RED + "[!] Oops!!")
             
     print("="*60)
