@@ -1,6 +1,6 @@
 
 # Naddaha
-Naddaha is a python script used in downloading screenshots of list of urls to be used in blue team investigations and SOC "Security operation centers" daily work.
+Naddaha is a python script that can be used in downloading screenshots of list of urls to be used in blue team investigations and SOC "Security operation centers" daily work.
 
 
 ## Installation
